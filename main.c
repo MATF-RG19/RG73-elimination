@@ -8,6 +8,17 @@
 #include "function.h"
 
 int main(int argc, char **argv){
+   /* Ambijentalna boja svetla. */
+    GLfloat light_ambient[] = { 0, 0, 0, 1 };
+
+    /* Difuzna boja svetla. */
+    GLfloat light_diffuse[] = { 1, 1, 1, 1 };
+
+    /* Spekularna boja svetla. */
+    GLfloat light_specular[] = { 1, 1, 1, 1 };
+
+    /* Ambijentalno osvetljenje scene. */
+    GLfloat model_ambient[] = { 0.3, 0.3, 0.3, 1 };
    
     /*Inicijalizacija*/
     glutInit(&argc, argv);
@@ -33,6 +44,15 @@ int main(int argc, char **argv){
 
     /*boja pozadine*/
     glClearColor(0.10,0.20,0.30, 0);
+  
+    /*Ukljucivanje svetla, i osvetljavanje scene*/
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, model_ambient);
+
 
     x_position=0;
     y_position=-0.6;
@@ -72,12 +92,46 @@ void on_reshape(int width, int height){
 
 void on_display(void){
 
+   /* Ambijentalna boja svetla. */
+    GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1 };
+
+   /* Difuzna boja svetla. */
+    GLfloat light_diffuse[] = { 1, 1, 1, 1 };
+
+    /* Spekularna boja svetla. */
+    GLfloat light_specular[] = { 0.3, 0.3, 0.3, 1 };
+
+    /* Koeficijenti ambijentalne refleksije materijala. */
+    GLfloat ambient_coeffs[] = { 0.1, 0.1, 0.1, 1 };
+
+    /* Koeficijenti difuzne refleksije materijala. */
+    GLfloat diffuse_coeffs[] = { 0.0, 0.5, 0.8, 1 };
+
+    /* Koeficijenti spekularne refleksije materijala. */
+    GLfloat specular_coeffs[] = { 0, 0, 0, 1 };
+
+    /* Koeficijent glatkosti materijala. */
+    GLfloat shininess = 15;
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
  
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(0, 0, 3, 0, 0, 0, 0, 1, 0);
  
+    /* Ukljucuje se osvjetljenje i podesavaju parametri svetla. */
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+
+    /* Podesavaju se parametri materijala. */
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coeffs);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coeffs);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs);
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+
     glPushMatrix();
         glTranslatef(x_position, y_position,z_position);
         drawMan();
@@ -115,20 +169,44 @@ void on_display(void){
 void on_keyboard(unsigned char key, int x, int y){
 
     switch(key){
-       case 27:
-         exit(0);
-         break;
-       case 'g':
-       case 'G':
-          if(!running){
-            glutDisplayFunc(on_display);
-            glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
-            glutTimerFunc(0, on_timer, TIMER_ANIMATION);
-            running=true;
-           }
-          break;
-     case 'a':
-     case 'A':
+      case 27:
+        exit(0);
+        break;
+      case 'g':
+      case 'G':
+        if(!running){
+          glutDisplayFunc(on_display);
+          glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+          glutTimerFunc(0, on_timer, TIMER_ANIMATION);
+          running=true;
+          }
+        break;
+      case 'p':
+      case 'P':
+        if(running){
+          running = false;
+        }else{
+          glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+          glutTimerFunc(0, on_timer, TIMER_ANIMATION);
+          running = true;
+        }
+        break;
+      case 'r':
+      case 'R':
+        x_position=0;
+        y_position=-0.6;
+        z_position=0;
+        man_radius=0.1;
+        man_movement=0.05;
+
+        animation_ongoing=0;
+
+        player_moving = false;
+        left_pressed = false;
+        right_pressed = false;
+        break;
+      case 'a':
+      case 'A':
         left_pressed = true;
 
         if(x_position - man_movement <= (left + man_radius *2.5 ))
