@@ -2,6 +2,11 @@
 #include "function.h"
 
 void drawMan(void){
+    if(left_pressed)
+	    	glRotatef(-90, 0, 1, 0);
+	  else if(right_pressed)
+	  	  glRotatef(90, 0, 1, 0);
+    
     glShadeModel(GL_FLAT);
       /*glava*/
     glPushMatrix();
@@ -39,13 +44,17 @@ void drawMan(void){
     glColor3f(0.623,0.372,0.623);
     /*leva ruka*/
      glPushMatrix();
-         glTranslatef(-0.18,0,0);
+         glTranslatef(-0.18, 0.11, 0);
+	       glRotatef(90*sin(animation_parameter), 1, 0, 0);
+	       glTranslatef(0, -0.11f, 0);
          glScalef(0.25, 1.3, 0.25);
          glutSolidCube(0.17);
       glPopMatrix();
  /*desna ruka*/
    glPushMatrix();
-       glTranslatef(0.18,0,0);
+       glTranslatef(0.18, 0.11 ,0);
+	     glRotatef(-90*sin(animation_parameter), 1, 0, 0);
+	     glTranslatef(0, -0.11f, 0);
        glScalef(0.25, 1.3, 0.25);
        glutSolidCube(0.17);
    glPopMatrix();
