@@ -70,3 +70,10 @@ void drawGround() {
 		glutSolidCube(1);
 	glPopMatrix();
 }
+
+void drawBall(){
+
+    glColor3f(0,0,0);
+    glScalef(0.09,0.09,0.09);
+    glutSolidSphere(1,30,30);
+}

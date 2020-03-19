@@ -21,6 +21,7 @@ extern void on_keyboard_up(unsigned char key, int x, int y);
 extern void on_timer(int value);
 
 extern void drawMan();
+extern void drawBall();
 extern void drawGround();
 
 int window_width, window_height;
