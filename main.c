@@ -7,6 +7,15 @@
 #include <stdbool.h>
 #include "function.h"
 
+/*Struktura za loptu*/
+typedef struct Lopta {
+  float x;
+  float y;
+  bool free;
+} Ball;
+
+Ball balls[10];
+
 int main(int argc, char **argv){
    /* Ambijentalna boja svetla. */
     GLfloat light_ambient[] = { 0, 0, 0, 1 };
@@ -42,8 +51,11 @@ int main(int argc, char **argv){
     glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
 
+    /*Generisanje seeda za objekte*/
+    srand(time(NULL));
+  
     /*boja pozadine*/
-    glClearColor(0.10,0.20,0.30, 0);
+    glClearColor(0.08,0.30,0.35, 0);
   
     /*Ukljucivanje svetla, i osvetljavanje scene*/
     glEnable(GL_LIGHTING);
@@ -69,6 +81,10 @@ int main(int argc, char **argv){
     left_pressed = false;
     right_pressed = false;
 
+   for(int i = 0; i < 10; i++) {
+      balls[i].free = true;
+    }
+    
     glutMainLoop();
 return 0;
 }
@@ -142,6 +158,14 @@ void on_display(void){
         drawGround();
     glPopMatrix();
 
+    for(int i = 0; i < 10; i++) {
+      if(!balls[i].free) {
+        glPushMatrix();
+          glTranslatef(balls[i].x, balls[i].y, 0);
+          drawBall();
+        glPopMatrix();
+      }
+    }
        /*Koordinatni sistem
         glBegin(GL_LINES);
         glColor3f(1,0,0);
@@ -177,6 +201,7 @@ void on_keyboard(unsigned char key, int x, int y){
         if(!running){
           glutDisplayFunc(on_display);
           glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+          glutTimerFunc(0, on_timer, TIMER_LOPTE);
           glutTimerFunc(0, on_timer, TIMER_ANIMATION);
           running=true;
           }
@@ -187,6 +212,7 @@ void on_keyboard(unsigned char key, int x, int y){
           running = false;
         }else{
           glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+          glutTimerFunc(0, on_timer, TIMER_LOPTE);
           glutTimerFunc(0, on_timer, TIMER_ANIMATION);
           running = true;
         }
@@ -204,6 +230,10 @@ void on_keyboard(unsigned char key, int x, int y){
         player_moving = false;
         left_pressed = false;
         right_pressed = false;
+        
+        for(int i = 0; i < 10; i++) {
+          balls[i].free = true;
+        }
         break;
       case 'a':
       case 'A':
@@ -250,28 +280,47 @@ void on_keyboard_up(unsigned char key, int x, int y) {
   }
 }
 
-void on_timer(int value)
-{
-    if (value != TIMER_ID && value != TIMER_ANIMATION)
+void on_timer(int value){
+
+    if (value != TIMER_ID && value != TIMER_LOPTE && value != TIMER_ANIMATION)
         return;
 
     if(value == TIMER_ID) {
-      glutPostRedisplay();
-     
-      if (running){
-        glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+      for(int i = 0; i < 10; i++) {
+        if(!balls[i].free) {
+          balls[i].y -= 0.02f;
+        }
       }
-    }else if(value == TIMER_ANIMATION) {
+      
+      glutPostRedisplay();
 
-      if(animation_ongoing == 1) {
+      if (running){
+          glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+      }
+    }
+    else if(value == TIMER_LOPTE) {
+      for(int i = 0; i < 10; i++) {
+        if(balls[i].free) {
+          balls[i].x = -2.5 + 5*(float)rand()/RAND_MAX;
+          balls[i].y = 2.0f;
+          balls[i].free = false;
+          break;
+        }
+      }
+
+     if (running){
+       glutTimerFunc(TIMER_LOPTE_INTERVAL, on_timer,TIMER_LOPTE);
+      }
+    } else if(value == TIMER_ANIMATION) {
+       if(animation_ongoing == 1) {
         animation_parameter += 0.1f;
-      } else {
+       }else{
         animation_parameter = 0;
       }
       glutPostRedisplay();
 
       if (running){
-        glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ANIMATION);
+          glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ANIMATION);
       }
     }
 }

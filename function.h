@@ -10,8 +10,10 @@
 #include <stdbool.h>
 
 #define TIMER_ID 0
+#define TIMER_LOPTE 1
 #define TIMER_ANIMATION 2
 #define TIMER_INTERVAL 20
+#define TIMER_LOPTE_INTERVAL 2000
 
 /*Deklaracije callback funkcija*/
 extern void on_display(void);
