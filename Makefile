@@ -7,7 +7,7 @@ LDLIBS  = -lglut -lGLU -lGL -lm
 $(PROGRAM): main.o draw.o 
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $(PROGRAM)  main.o draw.o $(LDLIBS)
 
-draw.o: draw.c function.h
+draw.o: draw.c functions.h
 	$(CC) $(LDFLAGS) $(CFLAGS) -c draw.c -o draw.o
 
 main.o: main.c
