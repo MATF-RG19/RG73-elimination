@@ -26,13 +26,13 @@ typedef struct Ball {
 #define MAX_LIVES 3
 
 //Teksture koje koristimo
-#define FILENAME0 "Textures/grass.bmp"
-#define FILENAME1 "Textures/building1.bmp"
-#define FILENAME2 "Textures/building2.bmp"
-#define FILENAME3 "Textures/lava.bmp"
-#define FILENAME4 "Textures/startgame.bmp"
-#define FILENAME5 "Textures/gameover.bmp"
-#define FILENAME6 "Textures/background.bmp"
+#define FILENAME0 "../Textures/grass.bmp"
+#define FILENAME1 "../Textures/building1.bmp"
+#define FILENAME2 "../Textures/building2.bmp"
+#define FILENAME3 "../Textures/lava.bmp"
+#define FILENAME4 "../Textures/startgame.bmp"
+#define FILENAME5 "../Textures/gameover.bmp"
+#define FILENAME6 "../Textures/background.bmp"
 
 // Deklaracije callback funkcija
 extern void on_display(void);
