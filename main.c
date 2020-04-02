@@ -41,7 +41,7 @@ int main(int argc, char **argv){
     glutKeyboardFunc(on_keyboard);
     glutKeyboardUpFunc(on_keyboard_up);
     glutReshapeFunc(on_reshape);
-    glutDisplayFunc(on_display);
+    glutDisplayFunc(draw_start_screen);
   
     // OpenGL inicijalizacija
     glEnable(GL_DEPTH_TEST);
@@ -427,7 +427,7 @@ void on_timer(int data){
       // Da li je igrac jos ziv
       if(lives <= 0){
          running = false;
-      //   glutDisplayFunc(draw_end_screen);
+         glutDisplayFunc(draw_end_screen);
       }
 
       glutPostRedisplay();
@@ -485,3 +485,69 @@ void reset(){
   spawn_counter=0;
 }
 
+void draw_start_screen(void){
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(0, 3.5, 0,
+              0, 0, 0,
+              1, 0, 0);
+
+    glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, names[4]);
+
+		glBegin(GL_POLYGON);
+			glTexCoord2f(0, 0);
+			glVertex3f(-2, 0, -4);
+
+			glTexCoord2f(0, 1);
+			glVertex3f(2, 0, -4);
+
+			glTexCoord2f(1, 1);
+			glVertex3f(2, 0, 4);
+
+			glTexCoord2f(1, 0);
+			glVertex3f(-2, 0, 4);
+		glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+
+    animation_ongoing=0;
+    glutSwapBuffers();
+
+}
+
+void draw_end_screen(void){
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(0, 3.5, 0,
+              0, 0, 0,
+              1, 0, 0);
+
+    glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, names[5]);
+
+		glBegin(GL_POLYGON);
+			glTexCoord2f(0, 0);
+			glVertex3f(-2, 0, -4);
+
+			glTexCoord2f(0, 1);
+			glVertex3f(2, 0, -4);
+
+			glTexCoord2f(1, 1);
+			glVertex3f(2, 0, 4);
+
+			glTexCoord2f(1, 0);
+			glVertex3f(-2, 0, 4);
+		glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+
+    glutSwapBuffers();
+
+}

@@ -30,6 +30,8 @@ typedef struct Ball {
 #define FILENAME1 "Textures/building1.bmp"
 #define FILENAME2 "Textures/building2.bmp"
 #define FILENAME3 "Textures/lava.bmp"
+#define FILENAME4 "Textures/startgame.bmp"
+#define FILENAME5 "Textures/gameover.bmp"
 #define FILENAME6 "Textures/background.bmp"
 
 // Deklaracije callback funkcija
