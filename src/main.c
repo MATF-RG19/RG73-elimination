@@ -1,3 +1,12 @@
+/*
+Projekat iz Racunarske grafike: Jovana Markovic 144/2017
+Napomene:
+1. Postavljanje osvetljenja nauceno na casu, iskorisceno gradivo sa casa, postavljeni drugi parametri tako da odgovaraju mom projektu
+2. Biblioteka za teksture preuzeta sa casa
+3. Postavljanje teksture za loptu nadjeno na internetu
+4. Neke slike za teksture preuzete od drugih kolega (tj. slike tekstura za nebo i zgrade preuzete od koleginice ciji je projekat RG135-rooftop-runner)
+*/
+
 #include <GL/glut.h>
 #include <stdio.h>
 #include <stdlib.h>
