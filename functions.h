@@ -25,12 +25,21 @@ typedef struct Ball {
 
 #define MAX_LIVES 3
 
+//Teksture koje koristimo
+#define FILENAME0 "Textures/grass.bmp"
+#define FILENAME1 "Textures/building1.bmp"
+#define FILENAME2 "Textures/building2.bmp"
+#define FILENAME3 "Textures/lava.bmp"
+#define FILENAME6 "Textures/background.bmp"
+
 // Deklaracije callback funkcija
 extern void on_display(void);
 extern void on_reshape(int width, int height);
 extern void on_keyboard(unsigned char key, int x, int y);
 extern void on_keyboard_up(unsigned char key, int x, int y);
 extern void on_timer(int value);
+extern void draw_start_screen(void);
+extern void draw_end_screen(void);
 
 extern void reset();
 
@@ -38,12 +47,14 @@ extern void draw_man();
 extern void draw_text();
 extern void draw_ball();
 extern void draw_ground();
+extern void draw_axes();
+
+// Za teksture
+extern void load_textures();
+extern GLuint names[7];
 
 int window_width, window_height;
-
-// Ivice do kojih coveculjak moze da se krece
-//Kasnije ce name koristiti za postavljanje tekstura
-double left_wall, right_wall;
+double left_wall, right_wall, bottom_wall, top_wall;
 
 // Promenljive za polozaj coveka
 double x_position, y_position, z_position;
@@ -53,6 +64,7 @@ double man_height;
 
 bool left_pressed;
 bool right_pressed;
+//da li pokusava da uhvati loptu
 bool has_target;
 
 float arms_angle;
@@ -64,6 +76,5 @@ float animation_parameter;
 bool running;
 int score;
 int lives;
-
 
 #endif

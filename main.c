@@ -7,18 +7,18 @@
 #include <stdbool.h>
 
 #include "functions.h"
+#include "image.h"
 
 //Niz lopti koje padaju
 Ball balls[BALLS_LEN];
 
+// Niz u koji smestamo teksture
+GLuint names[7];
+
 int main(int argc, char **argv){
-    // Ambijentalna boja svetla. 
+    // Ambijentalna, difuzna, spekularna boja svetla redom
     GLfloat light_ambient[] = { 0, 0, 0, 1 };
-
-    // Difuzna boja svetla. 
     GLfloat light_diffuse[] = { 1, 1, 1, 1 };
-
-    // Spekularna boja svetla. 
     GLfloat light_specular[] = { 1, 1, 1, 1 };
 
     // Ambijentalno osvetljenje scene.
@@ -34,6 +34,9 @@ int main(int argc, char **argv){
     glutCreateWindow("Elimination");
     glutFullScreen();
   
+    // Teksture koje cu koristiti
+    load_textures();
+    
     // Pozivanje funkcija za obradu dogadjaja
     glutKeyboardFunc(on_keyboard);
     glutKeyboardUpFunc(on_keyboard_up);
@@ -60,20 +63,21 @@ int main(int argc, char **argv){
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, model_ambient);
 
-
     x_position=0;
-    y_position=-0.6;
+    y_position=-1;
     z_position=0;
     man_radius=0.25;
     man_height=0.58;
     man_movement=1.5;
 
-    left_wall=-3;
-    right_wall=3;
-
+    left_wall=-2.8;
+    right_wall=2.8;
+    bottom_wall=-1.4;
+    top_wall=2.5;
+    
     animation_ongoing=false;
     animation_parameter=0;
-    //da li pokusava da uhvati loptu
+
     has_target=false;
     arms_angle=0;
     
@@ -106,22 +110,14 @@ void on_reshape(int width, int height){
 
 void on_display(void){
 
-    // Ambijentalna boja svetla.
+    // Ambijentalna, difuzna, spekularna boja svetla redom
     GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1 };
-
-    // Difuzna boja svetla. 
     GLfloat light_diffuse[] = { 1, 1, 1, 1 };
-
-    // Spekularna boja svetla.
     GLfloat light_specular[] = { 0.3, 0.3, 0.3, 1 };
 
-    // Koeficijenti ambijentalne refleksije materijala.
+    // Koeficijenti ambijentalne, difuzne, spekularne refleksije materijala redom
     GLfloat ambient_coeffs[] = { 0.1, 0.1, 0.1, 1 };
-
-    // Koeficijenti difuzne refleksije materijala.
     GLfloat diffuse_coeffs[] = { 0.0, 0.5, 0.8, 1 };
-
-    // Koeficijenti spekularne refleksije materijala.
     GLfloat specular_coeffs[] = { 0, 0, 0, 1 };
 
     // Koeficijent glatkosti materijala.
@@ -134,6 +130,7 @@ void on_display(void){
     gluLookAt(0, 0, 3, 0, 0, 0, 0, 1, 0);
  
     // Ispisuje se tekst za zivot i poene
+    glDisable(GL_LIGHTING);
     draw_text();
     
     // Ukljucuje se osvjetljenje i podesavaju parametri svetla.
@@ -149,19 +146,97 @@ void on_display(void){
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs);
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
+    //Teksture
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
+	
+    // nebo
+	glBindTexture(GL_TEXTURE_2D, names[6]);
+	glBegin(GL_QUADS);
+    glNormal3f(0, 0, 1);
+
+    glTexCoord2f(0, 0);
+    glVertex3f(left_wall-2, bottom_wall-1, -1);
+
+    glTexCoord2f(1, 0);
+    glVertex3f(right_wall+2, bottom_wall-1, -1);
+
+    glTexCoord2f(1, 1);
+    glVertex3f(right_wall+2, top_wall+2, -1);
+
+    glTexCoord2f(0, 1);
+    glVertex3f(left_wall-2, top_wall+2, -1);
+    glEnd();
+  
+    // leva zgrada
+    glBindTexture(GL_TEXTURE_2D,names[1]);
+    glBegin(GL_QUADS);
+    glNormal3f(0, 0, 1);
+
+    glTexCoord2f(0, 0);
+    glVertex3f(left_wall, bottom_wall, 1);
+
+    glTexCoord2f(1, 0);
+    glVertex3f(left_wall, bottom_wall, -1);
+
+    glTexCoord2f(1, 1);
+    glVertex3f(left_wall, top_wall, -1);
+
+    glTexCoord2f(0, 1);
+    glVertex3f(left_wall, top_wall, 1);
+    glEnd();
+  
+    // desna zgrada
+    glBindTexture(GL_TEXTURE_2D,names[2]);
+    glBegin(GL_QUADS);
+    glNormal3f(0, 0, 1);
+
+    glTexCoord2f(0, 0);
+    glVertex3f(right_wall, bottom_wall, -1);
+
+    glTexCoord2f(1, 0);
+    glVertex3f(right_wall, bottom_wall, 1);
+
+    glTexCoord2f(1, 1);
+    glVertex3f(right_wall, top_wall, 1);
+
+    glTexCoord2f(0, 1);
+    glVertex3f(right_wall, top_wall, -1);
+    glEnd();
+
+    // trava
+    glBindTexture(GL_TEXTURE_2D, names[0]);
+    glBegin(GL_QUADS);
+    glNormal3f(0, 0, 1);
+
+    glTexCoord2f(0, 0);
+    glVertex3f(left_wall, bottom_wall, 1);
+
+    glTexCoord2f(1, 0);
+    glVertex3f(right_wall, bottom_wall, 1);
+
+    glTexCoord2f(1, 1);
+    glVertex3f(right_wall, bottom_wall, -1);
+
+    glTexCoord2f(0, 1);
+    glVertex3f(left_wall, bottom_wall, -1);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
     
-    // Coveculjak
+    // Igrac
     glPushMatrix();
         glTranslatef(x_position, y_position,z_position);
         draw_man();
     glPopMatrix();
-
-    glDisable(GL_LIGHTING);
+   
+   /*Posto smo postavili teksturu za travu, vise nam ne treba pod
     glPushMatrix();
         draw_ground();
     glPopMatrix();
-
+   */
+   
     // Lopte
     for(int i = 0; i < BALLS_LEN; i++) {
       if(!balls[i].free) {
@@ -171,26 +246,10 @@ void on_display(void){
         glPopMatrix();
       }
     }
+    
        /*Koordinatni sistem
-        glBegin(GL_LINES);
-        glColor3f(1,0,0);
-        glVertex3f(0,0,0);
-        glVertex3f(100,0,0);
-        glVertex3f(0,0,0);
-        glVertex3f(-100,0,0);
-        
-        glColor3f(0,1,0);
-        glVertex3f(0,0,0);
-        glVertex3f(0,100,0);
-        glVertex3f(0,0,0);
-        glVertex3f(0,-100,0);
-        glColor3f(0,0,1);
-        glVertex3f(0,0,0);
-        glVertex3f(0,0,100);
-        glVertex3f(0,0,0);
-        glVertex3f(0,0,-100);
-        glEnd(); 
-        */ 
+        draw_axes();
+        */
     
     glutSwapBuffers();
 }
@@ -228,7 +287,7 @@ void on_keyboard(unsigned char key, int x, int y){
       case 'r':
       case 'R':
         x_position=0;
-        y_position=-0.6;
+        y_position=-1;
         z_position=0;
         man_radius=0.25;
         man_height=0.58;
@@ -249,9 +308,9 @@ void on_keyboard(unsigned char key, int x, int y){
       case 'a':
       case 'A':
         left_pressed = true;
-        if(!right_pressed) {
+        if(!right_pressed){
           animation_ongoing = true;
-        } else {
+        }else{
           animation_ongoing = false;
           animation_parameter = 0;
         }
@@ -260,9 +319,9 @@ void on_keyboard(unsigned char key, int x, int y){
       case 'd':
       case 'D':
         right_pressed = true;
-        if(!left_pressed) {
+        if(!left_pressed){
           animation_ongoing = true;
-        } else {
+        }else{
           animation_ongoing = false;
           animation_parameter = 0;
         }
@@ -272,14 +331,14 @@ void on_keyboard(unsigned char key, int x, int y){
     }
 }
 
-void on_keyboard_up(unsigned char key, int x, int y) {
+void on_keyboard_up(unsigned char key, int x, int y){
   switch(key){
    case 'a':
    case 'A':
       left_pressed = false;
-      if(!right_pressed) {
+      if(!right_pressed){
         animation_ongoing = false;
-      } else {
+      }else{
         animation_ongoing = true;
         animation_parameter = 0;
       }
@@ -287,9 +346,9 @@ void on_keyboard_up(unsigned char key, int x, int y) {
    case 'd':
    case 'D':
       right_pressed = false;
-      if(!left_pressed) {
+      if(!left_pressed){
         animation_ongoing = false;
-      } else {
+      }else{
         animation_ongoing = true;
         animation_parameter = 0;
       }
@@ -299,26 +358,26 @@ void on_keyboard_up(unsigned char key, int x, int y) {
   }
 }
 
-void on_timer(int data) {
+void on_timer(int data){
 
-  switch(data) {
+  switch(data){
     case TIMER_ID:
       // Azuriraj objekte
-      for(int i = 0; i < BALLS_LEN; i++) {
+      for(int i = 0; i < BALLS_LEN; i++){
         // Azuriramo samo postojece objekte
         if(!balls[i].free) {
           // Move the object
           balls[i].y -= 0.02f;
 
           // Kolizija sa igracem
-          if(fabs(x_position-balls[i].x)<man_radius && y_position+man_height>balls[i].y) {
+          if(fabs(x_position-balls[i].x)<man_radius && y_position+man_height>balls[i].y){
             balls[i].free = true;
             score++;
             continue;
           }
 
           // Oslobodimo objekat kada dovoljno padne
-          if(balls[i].y < -1.5f) {
+          if(balls[i].y < -1.5f){
             lives--;
             balls[i].free = true;
           }
@@ -330,12 +389,12 @@ void on_timer(int data) {
       bool moving_right = right_pressed && !left_pressed;
 
       // Pomera se igrac
-      if(moving_left) {
+      if(moving_left){
         x_position -= man_movement * (double)TIMER_INTERVAL/1000;
         if(x_position <= (left_wall + man_radius * 2.5 ))
           x_position = left_wall + man_radius * 2.5;
       }
-      if(moving_right) {
+      if(moving_right){
         x_position += man_movement * (double)TIMER_INTERVAL/1000;
         if(x_position > (right_wall - man_radius * 2.5 ))
           x_position = right_wall - man_radius * 2.5;
@@ -345,11 +404,11 @@ void on_timer(int data) {
       int closest = -1;
       float min_dist = 5.0;
       float dist;
-      for(int i = 0; i < BALLS_LEN; i++) {
-        if(!balls[i].free) {
+      for(int i = 0; i < BALLS_LEN; i++){
+        if(!balls[i].free){
           if((moving_left && balls[i].x<=x_position) || (moving_right && balls[i].x>=x_position) || (fabs(balls[i].x-x_position)<=man_radius)) {
             dist = (x_position-balls[i].x)*(x_position-balls[i].x) + (y_position-balls[i].y)*(y_position-balls[i].y);
-            if(dist < min_dist) {
+            if(dist < min_dist){
               min_dist = dist;
               closest = i;
             }
@@ -358,23 +417,22 @@ void on_timer(int data) {
       }
 
       // Ako postoji objekat dovoljno blizu oznaci da igraca podize ruke i postavi ugao
-      if(closest != -1) {
+      if(closest != -1){
         has_target = true;
         arms_angle = -90-atan2(balls[closest].y-y_position, balls[closest].x-x_position)*360/(2*3.14);
-      } else {
+      }else{
         has_target = false;
       }
 
       // Da li je igrac jos ziv
-      if(lives <= 0) {
+      if(lives <= 0){
          running = false;
-        //Tek treba da napravim ekran za kraj igice
-       // glutDisplayFunc(draw_end_screen);
+      //   glutDisplayFunc(draw_end_screen);
       }
 
       glutPostRedisplay();
 
-      if (running) {
+      if (running){
         glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
       }
       break;
@@ -382,12 +440,12 @@ void on_timer(int data) {
       // Ne koristimo dugacak tajmer za ovo nego uvecavamo brojacku promenljivu
       // kako bi mogli uspesno da pauziramo igricu
       // inace svaki put kada pauziramo na manje od 2 sekunde pocelo bi da pada duplo vise lopti
-      if (running) {
+      if (running){
         spawn_counter++;
-        if(spawn_counter==SPAWN_INTERVAL) {
+        if(spawn_counter==SPAWN_INTERVAL){
           // Trazimo slobodan slot za objekat
-          for(int i = 0; i < BALLS_LEN; i++) {
-            if(balls[i].free) {
+          for(int i = 0; i < BALLS_LEN; i++){
+            if(balls[i].free){
               // Postavljamo x poziciju objekta izmedju zgrada
               balls[i].x = left_wall + man_radius*2.5 + (right_wall-left_wall-2*man_radius*2.5)*(float)rand()/RAND_MAX;
               // Postavljamo y poziciju objekta iznad ekrana
@@ -404,9 +462,9 @@ void on_timer(int data) {
       }
       break;
     case TIMER_ANIMATION:
-      if(animation_ongoing == 1) {
+      if(animation_ongoing == 1){
         animation_parameter += 0.1f;
-      } else {
+      }else{
         animation_parameter = 0;
       }
 
@@ -418,10 +476,10 @@ void on_timer(int data) {
   }
 }
 
-void reset() {
+void reset(){
   score = 0;
   lives = MAX_LIVES;
-  for(int i = 0; i < BALLS_LEN; i++) {
+  for(int i = 0; i < BALLS_LEN; i++){
     balls[i].free = true;
   }
   spawn_counter=0;

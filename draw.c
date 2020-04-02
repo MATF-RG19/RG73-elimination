@@ -2,6 +2,8 @@
 
 #include "functions.h"
 
+GLUquadric* sphere;
+
 void draw_man(void){
   // ako su i levo i desno pritisnuti ne pomeramo igraca
   bool moving_left = left_pressed && !right_pressed;
@@ -104,38 +106,53 @@ void draw_text() {
 
   // cuvaj trenutne matrice i promeni projekciju na ortografsku
   // postavljamo ravni na velicinu ekrana
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
     glLoadIdentity();
     gluOrtho2D(0, window_width, 0, window_height);
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
-      glLoadIdentity();
+    glLoadIdentity();
 
-      glPushMatrix();
-        glRasterPos2f(window_width-150, window_height-50);
+    glPushMatrix();
+        glRasterPos2f(window_width-330, window_height-50);
         sprintf(str, "Lives: %d", lives);
         len = strlen(str);
         for (int i = 0; i < len; i++) {
           glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, str[i]);
         }
-      glPopMatrix();
+    glPopMatrix();
 
-      glPushMatrix();
-        glRasterPos2f(70, window_height-50);
+    glPushMatrix();
+        glRasterPos2f(250, window_height-50);
         sprintf(str, "Score: %d", score);
         len = strlen(str);
         for (int i = 0; i < len; i++) {
           glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, str[i]);
         }
-      glPopMatrix();
+    glPopMatrix();
     glPopMatrix();
 
     glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
+    glPopMatrix();
 
-  glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_MODELVIEW);
+}
+   
+void draw_ball(){
+    // Crtamo loptu i postavljamo teksturu na loptu
+    sphere=gluNewQuadric();
+    glEnable(GL_TEXTURE_2D);
+    glScalef(0.09,0.09,0.09);
+    gluQuadricDrawStyle(sphere, GLU_FILL);
+    glBindTexture(GL_TEXTURE_2D, names[3]);
+    gluQuadricTexture(sphere, GL_TRUE);
+    gluQuadricNormals(sphere, GLU_SMOOTH);
+    gluSphere(sphere, 1.0, 32, 16);
+
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D,0);
 }
 
 void draw_ground() {
@@ -148,9 +165,26 @@ void draw_ground() {
 	glPopMatrix();
 }
 
-void draw_ball(){
-    // Crtamo loptu
-    glColor3f(1,1,0);
-    glScalef(0.09,0.09,0.09);
-    glutSolidSphere(1,30,30);
-}
+void draw_axes(){
+   //Koordinatni sistem
+     
+        glBegin(GL_LINES);
+        glColor3f(1,0,0);
+        glVertex3f(0,0,0);
+        glVertex3f(100,0,0);
+        glVertex3f(0,0,0);
+        glVertex3f(-100,0,0);
+        
+        glColor3f(0,1,0);
+        glVertex3f(0,0,0);
+        glVertex3f(0,100,0);
+        glVertex3f(0,0,0);
+        glVertex3f(0,-100,0);
+        glColor3f(0,0,1);
+        glVertex3f(0,0,0);
+        glVertex3f(0,0,100);
+        glVertex3f(0,0,0);
+        glVertex3f(0,0,-100);
+        glEnd(); 
+ }       
+ 
