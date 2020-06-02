@@ -405,7 +405,7 @@ void on_timer(int data){
           }
 
           // Oslobodimo objekat kada dovoljno padne
-          if(balls[i].y < -1.5f){
+          if(balls[i].y < -1.5f && balls[i].type!=0){
             lives--;
             balls[i].free = true;
           }

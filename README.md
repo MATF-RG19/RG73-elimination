@@ -4,7 +4,7 @@
 ---
 
 ### :memo: Opis:
-Elimination je projekat koji predstavlja igru u kojoj se igrač kreće levo-desno i sakuplja lopte. Cilj igre je sakupiti sto više lopti, da bi ostali sto duže u životu. Postoji vise razlicitih lopti koje nose razlicit broj poena (zelena - 1 poen, narandzasta - 5 poena, žuta - 10 poena), takodje postoji i losa lopta koja vam oduzima 5 poena. Nakon sto vam tri lopte padnu na pod, izgubili ste!
+Elimination je projekat koji predstavlja igru u kojoj se igrač kreće levo-desno i sakuplja lopte. Cilj igre je sakupiti sto više lopti, da bi ostali sto duže u životu. Postoji vise razlicitih lopti koje nose razlicit broj poena (zelena - 1 poen, narandzasta - 5 poena, žuta - 10 poena), takodje postoji i loša lopta koju treba izbegavati jer ako je uhvatite oduzima vam 5 poena. Nakon sto vam tri lopte padnu na pod, izgubili ste!
 
 ---
 
