@@ -10,18 +10,22 @@
 #include <stdbool.h>
 
 #define BALLS_LEN 10
+#define BROJ_TIPOVA 4
 
 // Struktura za loptu
 typedef struct Ball {
   double x, y;
+  int type;
   bool free;
 } Ball;
 
 #define TIMER_ID 0
 #define TIMER_SPAWN_OBJECT_ID 1
 #define TIMER_ANIMATION 2
+#define TIMER_GAME_OVER_ID 3
 #define TIMER_INTERVAL 20
 #define SPAWN_INTERVAL 100
+#define GAME_OVER_INTERVAL 2000
 
 #define MAX_LIVES 3
 
@@ -47,7 +51,10 @@ extern void reset();
 
 extern void draw_man();
 extern void draw_text();
-extern void draw_ball();
+extern void draw_bed_ball();
+extern void draw_ball1();
+extern void draw_ball2();
+extern void draw_ball3();
 extern void draw_ground();
 extern void draw_axes();
 
@@ -63,6 +70,7 @@ double x_position, y_position, z_position;
 double man_radius;
 double man_movement;
 double man_height;
+//double speed;
 
 bool left_pressed;
 bool right_pressed;
@@ -75,7 +83,9 @@ int spawn_counter;
 // Promenljive koje sluze za informacije o igri
 bool animation_ongoing;
 float animation_parameter;
+float gameover_parameter;
 bool running;
+bool gameover;
 int score;
 int lives;
 

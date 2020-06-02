@@ -84,7 +84,9 @@ int main(int argc, char **argv){
     bottom_wall=-1.4;
     top_wall=2.5;
     
+    
     animation_ongoing=false;
+    gameover=false;
     animation_parameter=0;
 
     has_target=false;
@@ -251,7 +253,15 @@ void on_display(void){
       if(!balls[i].free) {
         glPushMatrix();
           glTranslatef(balls[i].x, balls[i].y, 0);
-          draw_ball();
+          if(balls[i].type==0){
+            draw_bed_ball();
+          } else if(balls[i].type==1){
+            draw_ball1();
+          } else if(balls[i].type==2){
+            draw_ball2();
+          } else if(balls[i].type==3){
+            draw_ball3();
+          }        
         glPopMatrix();
       }
     }
@@ -274,6 +284,13 @@ void on_keyboard(unsigned char key, int x, int y){
       case 'G':
         if(!running){
           reset();
+          
+          gameover=false;
+          x_position=0;
+          y_position=-1;
+          z_position=0;
+        
+          gameover=false;
           glutDisplayFunc(on_display);
           glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
           glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_SPAWN_OBJECT_ID);
@@ -281,20 +298,10 @@ void on_keyboard(unsigned char key, int x, int y){
           running=true;
           }
         break;
-      // pauziraj/pokreni  
-      case 'p':
-      case 'P':
-        if(running){
-          running = false;
-        }else if(!running && lives!=0){
-          glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
-          glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_SPAWN_OBJECT_ID);
-          running = true;
-        }
-        break;
       //resetuj  
       case 'r':
       case 'R':
+        gameover=false;
         x_position=0;
         y_position=-1;
         z_position=0;
@@ -367,6 +374,8 @@ void on_keyboard_up(unsigned char key, int x, int y){
   }
 }
 
+
+
 void on_timer(int data){
 
   switch(data){
@@ -378,10 +387,20 @@ void on_timer(int data){
           // Move the object
           balls[i].y -= 0.02f;
 
-          // Kolizija sa igracem
+          // Kolizija sa igracem         
           if(fabs(x_position-balls[i].x)<man_radius && y_position+man_height>balls[i].y){
             balls[i].free = true;
-            score++;
+
+            if(balls[i].type==0){
+            score -=5;
+            }
+            else if(balls[i].type==1){
+              score++;
+            }else if(balls[i].type==2){
+              score += 5;
+            }else if(balls[i].type==3){
+              score +=10;
+            }
             continue;
           }
 
@@ -392,7 +411,7 @@ void on_timer(int data){
           }
         }
       }
-
+    if(!gameover){
       // ako su oba dugmeta pritisnuta ne pomeramo igraca
       bool moving_left = left_pressed && !right_pressed;
       bool moving_right = right_pressed && !left_pressed;
@@ -424,7 +443,7 @@ void on_timer(int data){
           }
         }
       }
-
+    
       // Ako postoji objekat dovoljno blizu oznaci da igraca podize ruke i postavi ugao
       if(closest != -1){
         has_target = true;
@@ -432,11 +451,11 @@ void on_timer(int data){
       }else{
         has_target = false;
       }
-
+    }
       // Da li je igrac jos ziv
       if(lives <= 0){
-         running = false;
-         glutDisplayFunc(draw_end_screen);
+        gameover = true;
+        glutTimerFunc(GAME_OVER_INTERVAL, on_timer, TIMER_GAME_OVER_ID);
       }
 
       glutPostRedisplay();
@@ -459,6 +478,8 @@ void on_timer(int data){
               balls[i].x = left_wall + man_radius*2.5 + (right_wall-left_wall-2*man_radius*2.5)*(float)rand()/RAND_MAX;
               // Postavljamo y poziciju objekta iznad ekrana
               balls[i].y = 2.0f;
+              //Postavljamo tip
+              balls[i].type=rand()%BROJ_TIPOVA;
               // Oznacimo objekat da je alociran
               balls[i].free = false;
               break;
@@ -477,10 +498,24 @@ void on_timer(int data){
         animation_parameter = 0;
       }
 
+      if(gameover){
+        gameover_parameter += 0.04;
+        if(gameover_parameter >= 1)
+          gameover_parameter = 1;
+      }else{
+        gameover_parameter = 0;
+      }
+
       glutPostRedisplay();
 
-      if(lives!=0)
+      if(running){
         glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ANIMATION);
+        break;
+      }
+      case TIMER_GAME_OVER_ID:
+        running = false;
+        glutDisplayFunc(draw_end_screen);
+        glutPostRedisplay();
       break;
   }
 }
@@ -490,6 +525,7 @@ void reset(){
   lives = MAX_LIVES;
   for(int i = 0; i < BALLS_LEN; i++){
     balls[i].free = true;
+    balls[i].type=0;
   }
   spawn_counter=0;
 }

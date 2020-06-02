@@ -4,19 +4,18 @@
 ---
 
 ### :memo: Opis:
-Elimination je projekat koji predstavlja igru u kojoj se igrač kreće levo-desno i sakuplja lopte. Cilj igre je sakupiti sto više lopti, da bi ostali sto duže u životu. Nakon sto vam tri lopte padnu na pod, izgubili ste!
+Elimination je projekat koji predstavlja igru u kojoj se igrač kreće levo-desno i sakuplja lopte. Cilj igre je sakupiti sto više lopti, da bi ostali sto duže u životu. Postoji vise razlicitih lopti koje nose razlicit broj poena (zelena - 1 poen, narandzasta - 5 poena, žuta - 10 poena), takodje postoji i losa lopta koja vam oduzima 5 poena. Nakon sto vam tri lopte padnu na pod, izgubili ste!
 
 ---
 
 ### :video_game: Komande:
-| Dugme | Opis
+| Dugme                        | Opis
 | :------------: | :-------------: |
-| `G`    | pokreni igricu |
-| `A`    | kreći se levo  |
-| `D`    | kreći se desno |
-| `R`    | restartuj igricu |
-| `P`   | pauziraj igricu |
-| `ESC`  | izađi iz programa |
+| <kbd>G</kbd>/<kbd>g</kbd>`   | pokreni igricu |
+| <kbd>A</kbd>/<kbd>a</kbd>    | kreći se levo  |
+| <kbd>D</kbd>/<kbd>d</kbd>    | kreći se desno |
+| <kbd>R</kbd>/<kbd>r</kbd>    | restartuj igricu |
+| <kbd>ESC</kbd>               | izađi iz programa |
 
 ---
 

@@ -4,25 +4,38 @@
 
 GLUquadric* sphere;
 
+//Ctramo igraca
 void draw_man(void){
   // ako su i levo i desno pritisnuti ne pomeramo igraca
   bool moving_left = left_pressed && !right_pressed;
   bool moving_right = right_pressed && !left_pressed;
 
+    if(!gameover){
     // okrecemo igraca na odgovarajucu stranu
      if(moving_left)
         glRotatef(-90, 0, 1, 0);
      else if(moving_right)
         glRotatef(90, 0, 1, 0);
-    
+
+    }else{
+        glTranslatef(0, -0.2f, 0);
+    }
+
     glShadeModel(GL_FLAT);
+    
+    float body_angel=0;
+    if(gameover){
+        glRotatef(45, 0, 1, 0);
+        body_angel=10*gameover_parameter;
+        glRotatef(body_angel, 1, 0, 0);
+    }
     // glava
     glPushMatrix();
         glColor3f(1,0.71,0.94);
         glTranslatef(0,0.4,0);
         glutSolidSphere(0.1, 100,100);
     glPopMatrix();
- 
+   
     // telo
     glPushMatrix();
         glColor3f(0.4,0,0.24);
@@ -37,7 +50,13 @@ void draw_man(void){
      // leva noga
      glPushMatrix();
          glTranslatef(-0.07,0,0);
+         if(!gameover){
          glRotatef(-40*sin(animation_parameter), 1, 0, 0);
+         }else{
+         glTranslatef(0, -0.1f, 0);
+         glRotatef(-25, 0, 1, 0);
+         glRotatef(-90-body_angel, 1, 0, 0);
+         }
          glTranslatef(0, -0.2, 0);
          glScalef(0.3, 1, 0.3);
          glutSolidCube(0.3);
@@ -45,7 +64,13 @@ void draw_man(void){
      // desna noga
      glPushMatrix();
      glTranslatef(0.07, 0, 0);
+     if(!gameover){
      glRotatef(40*sin(animation_parameter), 1, 0, 0);
+     }else{
+         glTranslatef(0, -0.1f, 0);
+         glRotatef(25, 0, 1, 0);
+         glRotatef(-90-body_angel, 1, 0, 0);
+     }
      glTranslatef(0, -0.2, 0);
      glScalef(0.3, 1, 0.3);
      glutSolidCube(0.3);     
@@ -58,6 +83,9 @@ void draw_man(void){
      // desna ruka
      glPushMatrix();
         glTranslatef(-0.16, 0.2, 0);
+        if(gameover){
+            glRotatef(-20-body_angel, 1, 0, 0);
+        }else{
         // ako je igrac blizu objekta i krece se onda rotiraj ruke ka objektu
         // ako je igrac blizu objekta i stoji samo podigni ruke
         // ako igrac nije blizu objekta onda animiraj kretanje ruku
@@ -71,6 +99,7 @@ void draw_man(void){
         }else{
             glRotatef(60*sin(animation_parameter), 1, 0, 0);
         }
+        }
         glTranslatef(0, -0.12f, 0);
         glScalef(0.25, 1.1, 0.25);
         glutSolidCube(0.25);
@@ -78,6 +107,9 @@ void draw_man(void){
      // leva ruka
      glPushMatrix();
         glTranslatef(0.16, 0.2 ,0);
+        if(gameover){
+            glRotatef(-20-body_angel, 1, 0, 0);
+        }else{
         // ako je igrac blizu objekta i krece se onda rotiraj ruke ka objektu
         // ako je igrac blizu objekta i stoji samo podigni ruke
         // ako igrac nije blizu objekta onda animiraj kretanje ruku
@@ -90,6 +122,7 @@ void draw_man(void){
             glRotatef(180, 1, 0, 0);
         }else{
             glRotatef(-60*sin(animation_parameter), 1, 0, 0);
+        }
         }
         glTranslatef(0, -0.12f, 0);
         glScalef(0.25, 1.1, 0.25);
@@ -140,7 +173,7 @@ void draw_text() {
     glMatrixMode(GL_MODELVIEW);
 }
    
-void draw_ball(){
+void draw_bed_ball(){
     // Crtamo loptu i postavljamo teksturu na loptu
     sphere=gluNewQuadric();
     glEnable(GL_TEXTURE_2D);
@@ -153,6 +186,28 @@ void draw_ball(){
 
     glDisable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D,0);
+}
+
+void draw_ball1(){
+       
+        glColor3f(0,1,0);
+        glScalef(0.09,0.09,0.09);
+        glutSolidSphere(1.0, 100,100);
+}
+void draw_ball2(){
+
+        glColor3f(1,0.3,0);
+        glScalef(0.09,0.09,0.09);
+        glutSolidSphere(1.0, 100,100);
+        
+}
+
+void draw_ball3(){
+
+        glColor3f(1,1,0);
+        glScalef(0.09,0.09,0.09);
+        glutSolidSphere(1.0, 100,100);
+        
 }
 
 void draw_ground() {
