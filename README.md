@@ -14,6 +14,7 @@ Elimination je projekat koji predstavlja igru u kojoj se igrač kreće levo-desn
 | <kbd>G</kbd>/<kbd>g</kbd>   | pokreni igricu |
 | <kbd>A</kbd>/<kbd>a</kbd>    | kreći se levo  |
 | <kbd>D</kbd>/<kbd>d</kbd>    | kreći se desno |
+| <kbd>P</kbd>/<kbd>p</kbd>    | pauziraj igricu |
 | <kbd>R</kbd>/<kbd>r</kbd>    | restartuj igricu |
 | <kbd>ESC</kbd>               | izađi iz programa |
 
