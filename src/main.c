@@ -298,6 +298,18 @@ void on_keyboard(unsigned char key, int x, int y){
           running=true;
           }
         break;
+        //pauziraj/pokreni
+      case 'p':
+      case 'P':
+        if(running){
+          running = false;
+        }else if(!running && lives!=0){
+          glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+          glutTimerFunc(0, on_timer, TIMER_ANIMATION);
+          glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_SPAWN_OBJECT_ID);
+          running = true;
+        }
+        break;
       //resetuj  
       case 'r':
       case 'R':
@@ -510,8 +522,8 @@ void on_timer(int data){
 
       if(running){
         glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ANIMATION);
-        break;
       }
+      break;
       case TIMER_GAME_OVER_ID:
         running = false;
         glutDisplayFunc(draw_end_screen);
