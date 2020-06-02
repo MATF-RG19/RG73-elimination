@@ -11,7 +11,7 @@ Elimination je projekat koji predstavlja igru u kojoj se igrač kreće levo-desn
 ### :video_game: Komande:
 | Dugme                        | Opis
 | :------------: | :-------------: |
-| <kbd>G</kbd>/<kbd>g</kbd>`   | pokreni igricu |
+| <kbd>G</kbd>/<kbd>g</kbd>   | pokreni igricu |
 | <kbd>A</kbd>/<kbd>a</kbd>    | kreći se levo  |
 | <kbd>D</kbd>/<kbd>d</kbd>    | kreći se desno |
 | <kbd>R</kbd>/<kbd>r</kbd>    | restartuj igricu |
